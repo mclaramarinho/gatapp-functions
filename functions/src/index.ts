@@ -32,18 +32,6 @@ setGlobalOptions({ maxInstances: 10 });
 // });
 
 
-// TODO - createUser
-export const createUser = onRequest((request, response) => {
-    logger.info("Create User request received", {structuredData: true});
-
-    // name / lastName / email / birthdate / gender / termsAccepted
-    response.status(501);
-    response.send("Create User - Not Implemented");
-};
-// TODO - updateUser
-// TODO - deleteUser
-// TODO - getUser
-
 // TODO - createPet
 // TODO - updatePet
 // TODO - deletePet
