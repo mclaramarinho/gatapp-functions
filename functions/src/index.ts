@@ -7,10 +7,16 @@
  * See a full list of supported triggers at https://firebase.google.com/docs/functions
  */
 
-import "./shared/firestore/init";
 import {setGlobalOptions} from "firebase-functions";
 import {onRequest} from "firebase-functions/https";
 import * as logger from "firebase-functions/logger";
+import { initializeApp } from "firebase-admin";
+
+initializeApp();
+
+
+import "./shared/firestore/init";
+import "./shared/auth/init";
 
 
 // Start writing functions

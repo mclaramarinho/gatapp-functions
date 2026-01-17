@@ -3,19 +3,28 @@ import { UpdateUserModel } from "./models/UpdateUserModel";
 import { firestore } from "../../../../shared/firestore/init";
 import { ExceptionsHandler } from "../../../../shared/handlers/ExceptionsHandler";
 import { FirestoreCollections } from "../../../../shared/firestore/collections";
+import { validateAuthToken } from "../../../../shared/auth/validateAuthToken";
 
 export const updateUser = onRequest(async (req, res) => {
     try {
+        const oauthToken = req.headers.authorization;
+        const userIdFromToken = await validateAuthToken(oauthToken?.replace("Bearer ", ""));
+
         const userId = req.query.userId as string;
         if (!userId) {
             res.status(400).json({ message: "Missing userId query parameter" });
             return;
         }
 
+        if(userId !== userIdFromToken) {
+            res.status(403).json({ message: "You can only update your own user data" });
+            return;
+        }
+
         const body = req.body;
         const model = new UpdateUserModel(new Map(Object.entries(body)));
 
-        const doc = firestore.collection(FirestoreCollections.Users).doc(req.query.userId as string);
+        const doc = firestore.collection(FirestoreCollections.Users).doc(userIdFromToken);
 
         const userSnapshot = await doc.get();
         if (!userSnapshot.exists) {

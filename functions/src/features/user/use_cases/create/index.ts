@@ -3,6 +3,7 @@ import { CreateUserModel } from "./models/CreateUserModel";
 import { ExceptionsHandler } from "../../../../shared/handlers/ExceptionsHandler";
 import firebase from "firebase/compat/app";
 import { firestore } from "../../../../shared/firestore/init";
+import { FirestoreCollections } from "../../../../shared/firestore/collections";
 
 export const createUser = onRequest((request, response) => {
     try {
@@ -11,15 +12,14 @@ export const createUser = onRequest((request, response) => {
         const model = new CreateUserModel(new Map(Object.entries(body)));
 
         // check if the user with the same googleId and email already exists
-        firestore.collection('users').where('email', '==', model.email).get().then((querySnapshot) => {
+        firestore.collection(FirestoreCollections.Users).where('email', '==', model.email).get().then((querySnapshot) => {
             if (!querySnapshot.empty) {
                 response.status(409).send({ error: 'User with the same email already exists' });
                 return;
             }
         });
 
-        // save firstName, lastName, email, birthdate, gender, googleId, termsAcceptedAt, termsAccepted
-        firestore.collection('users').add({
+        firestore.collection(FirestoreCollections.Users).add({
             firstName: model.firstName,
             lastName: model.lastName,
             email: model.email,

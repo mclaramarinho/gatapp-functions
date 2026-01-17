@@ -1,5 +1,3 @@
-import { InvalidRequestBodyException } from "../../../../../shared/exceptions/InvalidRequestBodyException";
-
 export class UserModel {
     id: string;
     googleId: string;
