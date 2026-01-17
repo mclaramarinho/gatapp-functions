@@ -1,7 +1,7 @@
-import { Gender } from "../../../../../shared/enums/gender";
 import { InvalidRequestBodyException } from "../../../../../shared/exceptions/InvalidRequestBodyException";
 
-export class CreateUserModel {
+export class UserModel {
+    id: string;
     googleId: string;
     email: string;
     firstName: string;
@@ -11,29 +11,30 @@ export class CreateUserModel {
     gender: Gender;
     termsAcceptedAt: Date;
     termsAccepted: boolean;
+    createdAt: string;
 
-    constructor(input: Map<string, any>) {
+    constructor(input: FirebaseFirestore.DocumentData) {
+        this.id = input.get('id');
         this.googleId = input.get('googleId');
-        
         this.email = input.get('email');
-        
         this.firstName = input.get('firstName');
         this.lastName = input.get('lastName');
-
         this.birthdate = input.get('birthdate');
-
-        if(!Gender.isValid(input.get('gender'))) {
-            throw new InvalidRequestBodyException('Invalid gender value');
-        }
         this.gender = input.get('gender');
-        
         this.termsAccepted = input.get('termsAccepted');
-        if(!this.termsAccepted) {
-            throw new InvalidRequestBodyException('Terms must be accepted');
-        }
         this.termsAcceptedAt = new Date(input.get('termsAcceptedAt'));
-        if(isNaN(this.termsAcceptedAt.getTime())) {
-            throw new InvalidRequestBodyException('Invalid termsAcceptedAt date format');
-        }
+        this.createdAt = input.get('createdAt');
+    }
+}
+
+
+class Gender {
+    static male = 1;
+    static female = 2;
+    static nonBinary = 3;
+    static other = 4;
+
+    static isValid(value: number): boolean {
+        return value === Gender.male || value === Gender.female || value === Gender.nonBinary || value === Gender.other;
     }
 }
