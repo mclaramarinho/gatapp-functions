@@ -1,6 +1,12 @@
+/**
+ * Exception thrown when the request body is invalid
+ */
 export class InvalidRequestBodyException extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "InvalidRequestBodyException";
-    }
+  /**
+   * @param {string} message
+   */
+  constructor(message: string) {
+    super(message);
+    this.name = "InvalidRequestBodyException";
+  }
 }

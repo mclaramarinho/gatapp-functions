@@ -1,5 +1,7 @@
-import { populateCatPedigreesCollection } from "../../features/pedigree/create"
-import { populatePetColorsCollection } from "../../features/petColor/create";
+import { populateCatPedigreesCollection }
+  from "../../features/pedigree/use_cases/create";
+import { populatePetColorsCollection }
+  from "../../features/petColor/use_cases/create/index";
 
 /**
  * Import this inside init.ts to ensure static collections are created
@@ -7,12 +9,12 @@ import { populatePetColorsCollection } from "../../features/petColor/create";
  * From then on, only run the ones needing updates or additions
  */
 export const initializeStaticCollections = async () => {
-    // First time only
-    await Promise.all([
-        populateCatPedigreesCollection(),
-        populatePetColorsCollection(),
-    ]);
+  // First time only
+  await Promise.all([
+    populateCatPedigreesCollection(),
+    populatePetColorsCollection(),
+  ]);
 
-    // Future updates only
-    await Promise.all([]);
-}
+  // Future updates only
+  await Promise.all([]);
+};

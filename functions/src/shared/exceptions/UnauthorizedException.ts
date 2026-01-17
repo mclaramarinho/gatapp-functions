@@ -1,6 +1,12 @@
+/**
+ * Custom exception to indicate unauthorized access attempts
+ */
 export class UnauthorizedException extends Error {
-    constructor(message: string) {
-        super(message);
-        this.name = "UnauthorizedException";
-    }
+  /**
+   * @param {string} message
+   */
+  constructor(message: string) {
+    super(message);
+    this.name = "UnauthorizedException";
+  }
 }
