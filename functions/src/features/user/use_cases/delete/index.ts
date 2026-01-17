@@ -24,8 +24,8 @@ export const deleteUser = onRequest(async (req, res) => {
             .catch((error) => {
                 const errorData = ExceptionsHandler.handle(error as Error);
                 res.status(errorData.statusCode).json({ message: errorData.message });
-                return;
-            });
+            })
+            .finally(() => { return; });
 
     } catch (error) {
         const errorData = ExceptionsHandler.handle(error as Error);

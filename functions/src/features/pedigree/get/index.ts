@@ -12,8 +12,10 @@ export const getPedigreesList = onRequest(async (req, res) => {
             return new CatPedigreeModel(+(doc.id), data.normalizedName, data.displayName);
         });
         res.status(200).json({ pedigrees });
+        return;
     } catch (error) {
         const errorHandled = ExceptionsHandler.handle(error as Error);
         res.status(errorHandled.statusCode).json({ message: errorHandled.message });
+        return;
     }
 });
