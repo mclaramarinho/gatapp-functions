@@ -12,24 +12,24 @@ export const deleteUser = onRequest(async (req, res) => {
 
         doc.get().then((doc) => {
             if (!doc.exists) {
-                res.status(404).send({ error: 'User not found' });
+                res.status(404).json({ message: 'User not found' });
                 return;
             }
         });
 
         doc.delete()
             .then(() => {
-                res.status(204).send({ message: 'User deleted successfully' });
+                res.status(204).json({ message: 'User deleted successfully' });
             })
             .catch((error) => {
                 const errorData = ExceptionsHandler.handle(error as Error);
-                res.status(errorData.statusCode).send(errorData.message);
+                res.status(errorData.statusCode).json({ message: errorData.message });
                 return;
             });
 
     } catch (error) {
         const errorData = ExceptionsHandler.handle(error as Error);
-        res.status(errorData.statusCode).send(errorData.message);
+        res.status(errorData.statusCode).json({ message: errorData.message });
         return;
     }
 });
