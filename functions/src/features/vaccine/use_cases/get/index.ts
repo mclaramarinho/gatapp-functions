@@ -3,13 +3,15 @@ import { firestore } from "../../../../shared/firestore/init";
 import { VaccineModel } from "../../models/VaccineModel";
 import { ExceptionsHandler }
   from "../../../../shared/handlers/ExceptionsHandler";
+import { FirestoreCollections } from "../../../../shared/firestore/collections";
 
 /**
  * Get the list of vaccines
  */
 export const getVaccinesList = onRequest(async (req, res) => {
   try {
-    const docs = await firestore.collection("vaccines").get();
+    const docs = await firestore
+        .collection(FirestoreCollections.Vaccines).get();
     const vaccines = docs.docs.map((doc) => {
       const data = doc.data();
       return new VaccineModel(

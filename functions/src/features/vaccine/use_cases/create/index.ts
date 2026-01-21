@@ -1,3 +1,4 @@
+import { FirestoreCollections } from "../../../../shared/firestore/collections";
 import { firestore } from "../../../../shared/firestore/init";
 import { VaccineModel } from "../../models/VaccineModel";
 
@@ -9,7 +10,7 @@ export const populateVaccinesCollection = async () => {
     const batch = firestore.batch();
     vaccines.forEach((vaccine) => {
       const docRef = firestore
-          .collection("vaccines")
+          .collection(FirestoreCollections.Vaccines)
           .doc(vaccine.id.toString());
       batch.set(docRef, {
         normalizedName: vaccine.normalizedName,

@@ -3,4 +3,5 @@ export enum FirestoreCollections {
     CatPedigrees = "catPedigrees",
     CatColors = "catColors",
     Pets = "pets",
+    Vaccines = "vaccines",
 }
