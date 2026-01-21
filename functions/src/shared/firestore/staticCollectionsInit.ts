@@ -2,6 +2,8 @@ import { populateCatPedigreesCollection }
   from "../../features/pedigree/use_cases/create";
 import { populatePetColorsCollection }
   from "../../features/petColor/use_cases/create/index";
+import { populateVaccinesCollection }
+  from "../../features/vaccine/use_cases/create";
 
 /**
  * Import this inside init.ts to ensure static collections are created
@@ -13,6 +15,7 @@ export const initializeStaticCollections = async () => {
   await Promise.all([
     populateCatPedigreesCollection(),
     populatePetColorsCollection(),
+    populateVaccinesCollection(),
   ]);
 
   // Future updates only

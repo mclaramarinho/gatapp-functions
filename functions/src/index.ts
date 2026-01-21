@@ -23,6 +23,7 @@ export * from "./features/pet";
 export * from "./features/pedigree";
 export * from "./features/petColor";
 export * from "./features/user";
+export * from "./features/vaccine";
 
 // TODO - createProfessional
 // TODO - updateProfessional
