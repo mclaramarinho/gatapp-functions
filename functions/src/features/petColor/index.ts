@@ -1,5 +1,1 @@
-import { getCatColorsList } from "./use_cases";
-
-export {
-  getCatColorsList,
-};
+export * from "./use_cases";

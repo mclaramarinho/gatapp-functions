@@ -1,5 +1,1 @@
-import { getPedigreesList } from "./use_cases";
-
-export {
-  getPedigreesList,
-};
+export * from "./use_cases";
