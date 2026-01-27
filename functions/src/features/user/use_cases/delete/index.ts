@@ -5,29 +5,30 @@ import { firestore } from "../../../../shared/firestore/init";
 import { validateAuthToken } from "../../../../shared/auth/validateAuthToken";
 import { FirestoreCollections } from "../../../../shared/firestore/collections";
 import { onRequest } from "firebase-functions/v2/https";
+import { UserManagementForbidden }
+  from "../../../../shared/exceptions/users/UserManagementForbidden";
+import { UserNotFound } from "../../../../shared/exceptions/users/UserNotFound";
+import { getAuthTokenFromRequest }
+  from "../../../../shared/auth/getAuthTokenFromRequest";
 
 export const deleteUser = onRequest(async (req, res) => {
   try {
     const body = new Map(Object.entries(req.body));
     const model = new DeleteUserModel(body);
 
-    const oauthToken = req.headers.authorization;
     const userIdFromToken = await validateAuthToken(
-        oauthToken?.replace("Bearer ", "")
+        getAuthTokenFromRequest(req)
     );
 
     if (model.id !== userIdFromToken) {
-      res.status(403)
-          .json({ message: "You can only delete your own user account" });
-      return;
+      throw UserManagementForbidden;
     }
 
     const doc = firestore
         .collection(FirestoreCollections.Users)
         .doc(userIdFromToken);
     if (!(await doc.get()).exists) {
-      res.status(404).json({ message: "User not found" });
-      return;
+      throw UserNotFound;
     }
 
     const data = (await doc.get()).data();
@@ -43,15 +44,18 @@ export const deleteUser = onRequest(async (req, res) => {
           res.status(204).json({ message: "User deleted successfully" });
         })
         .catch((error) => {
-          const errorData = ExceptionsHandler.handle(error as Error);
-          res.status(errorData.statusCode).json({ message: errorData.message });
+          const {
+            statusCode,
+            message,
+          } = ExceptionsHandler.handle(error as Error);
+          res.status(statusCode).json({ message: message });
         })
         .finally(() => {
           return;
         });
   } catch (error) {
-    const errorData = ExceptionsHandler.handle(error as Error);
-    res.status(errorData.statusCode).json({ message: errorData.message });
+    const { statusCode, message } = ExceptionsHandler.handle(error as Error);
+    res.status(statusCode).json({ message: message });
     return;
   }
 });

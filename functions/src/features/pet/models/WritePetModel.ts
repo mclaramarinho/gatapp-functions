@@ -23,7 +23,7 @@ export class WritePetModel {
    *
    * Will be validated while creating
    */
-  color: string;
+  color: number;
 
   /**
    * Birthdate in ISO8601 format (YYYY-MM-DDTHH:MM:SSZ)

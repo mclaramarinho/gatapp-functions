@@ -5,26 +5,25 @@ import { firestore } from "../../../../shared/firestore/init";
 import { FirestoreCollections } from "../../../../shared/firestore/collections";
 import { onRequest } from "firebase-functions/v2/https";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { UserEmailAlreadyExists }
+  from "../../../../shared/exceptions/users/UserEmailAlreadyExists";
 
-export const createUser = onRequest((request, response) => {
+export const createUser = onRequest(async (request, response) => {
   try {
     const body = request.body;
 
     const model = new CreateUserModel(new Map(Object.entries(body)));
 
-    // check if the user with the same googleId and email already exists
     firestore.collection(FirestoreCollections.Users)
         .where("email", "==", model.email)
         .get()
         .then((querySnapshot) => {
           if (!querySnapshot.empty) {
-            response.status(409)
-                .send({ error: "User with the same email already exists" });
-            return;
+            throw new UserEmailAlreadyExists();
           }
         });
 
-    firestore.collection(FirestoreCollections.Users).add({
+    await firestore.collection(FirestoreCollections.Users).add({
       firstName: model.firstName,
       lastName: model.lastName,
       email: model.email,
@@ -40,9 +39,8 @@ export const createUser = onRequest((request, response) => {
 
     response.status(201).send({ message: "User created successfully" });
   } catch (error) {
-    const responseForException = ExceptionsHandler.handle(error as Error);
-    response.status(responseForException.statusCode)
-        .send({ error: responseForException.message });
+    const { statusCode, message } = ExceptionsHandler.handle(error as Error);
+    response.status(statusCode).send({ error: message });
     return;
   }
 });

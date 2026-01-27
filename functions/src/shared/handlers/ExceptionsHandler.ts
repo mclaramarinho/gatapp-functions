@@ -1,3 +1,4 @@
+import { ICustomException } from "../exceptions/ICustomException";
 import { InvalidRequestBodyException }
   from "../exceptions/InvalidRequestBodyException";
 
@@ -17,13 +18,11 @@ export class ExceptionsHandler {
    * @param {Error} exception
    * @return {ResponseForExceptionInterface}
    */
-  static handle(exception: Error): ResponseForExceptionInterface {
-    if (exception instanceof InvalidRequestBodyException) {
-      return { statusCode: 422, message: exception.message };
-    }
-
-    if (exception instanceof UnauthorizedException) {
-      return { statusCode: 401, message: exception.message };
+  static handle(
+      exception: Error | ICustomException
+  ) : ResponseForExceptionInterface {
+    if ("statusCode" in exception) {
+      return { statusCode: exception.statusCode, message: exception.message };
     }
 
     return { statusCode: 500, message: "Internal Server Error" };

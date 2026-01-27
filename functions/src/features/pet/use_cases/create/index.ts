@@ -6,42 +6,29 @@ import { WritePetModel } from "../../models/WritePetModel";
 import { ExceptionsHandler }
   from "../../../../shared/handlers/ExceptionsHandler";
 import { FieldValue, Timestamp } from "firebase-admin/firestore";
+import { UserValidations }
+  from "../../../../shared/validations/UserValidations";
+import { getAuthTokenFromRequest }
+  from "../../../../shared/auth/getAuthTokenFromRequest";
+import { PedigreeValidations }
+  from "../../../../shared/validations/PedigreeValidations";
+import { CatColorValidations }
+  from "../../../../shared/validations/CatColorValidations";
 
 export const createPet = onRequest(async (req, res) => {
   try {
     const body = req.body;
     const model = new WritePetModel(new Map(Object.entries(body)));
 
-    const oauthToken = req.headers.authorization;
-
     // validate ownerId exists in the system
-    const ownerId = await validateAuthToken(oauthToken?.replace("Bearer ", ""));
-    const doc = await firestore
-        .collection(FirestoreCollections.Users).doc(ownerId).get();
-    if (!doc.exists) {
-      res.status(404).json({ message: "Owner not found" });
-      return;
-    }
+    const ownerId = await validateAuthToken(getAuthTokenFromRequest(req));
+    await UserValidations.exists(ownerId);
 
     // validate pedigree
-    const pedigreeId = model.pedigree;
-    const pedigreeDoc = await firestore
-        .collection(FirestoreCollections.CatPedigrees)
-        .doc(pedigreeId.toString()).get();
-    if (!pedigreeDoc.exists) {
-      res.status(404).json({ message: "Pedigree not found" });
-      return;
-    }
+    await PedigreeValidations.exists(model.pedigree);
 
     // validate color
-    const colorId = model.color;
-    const colorDoc = await firestore
-        .collection(FirestoreCollections.CatColors)
-        .doc(colorId.toString()).get();
-    if (!colorDoc.exists) {
-      res.status(404).json({ message: "Color not found" });
-      return;
-    }
+    await CatColorValidations.exists(model.color);
 
     // save pet
     await firestore.collection(FirestoreCollections.Pets).add({
@@ -57,8 +44,8 @@ export const createPet = onRequest(async (req, res) => {
     res.status(201).json({ message: "Pet created successfully" });
     return;
   } catch (error) {
-    const errorHandled = ExceptionsHandler.handle(error as Error);
-    res.status(errorHandled.statusCode).json({ message: errorHandled.message });
+    const { statusCode, message } = ExceptionsHandler.handle(error as Error);
+    res.status(statusCode).json({ message: message });
     return;
   }
 });

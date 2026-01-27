@@ -23,8 +23,8 @@ export const getVaccinesList = onRequest(async (req, res) => {
     res.status(200).json({ vaccines });
     return;
   } catch (error) {
-    const errorHandled = ExceptionsHandler.handle(error as Error);
-    res.status(errorHandled.statusCode).json({ message: errorHandled.message });
+    const { statusCode, message } = ExceptionsHandler.handle(error as Error);
+    res.status(statusCode).json({ message: message });
     return;
   }
 });

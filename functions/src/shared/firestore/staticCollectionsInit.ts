@@ -1,9 +1,11 @@
 import { populateCatPedigreesCollection }
-  from "../../features/pedigree/use_cases/create";
+  from "../../features/pedigree/use_cases/populate";
+import { populatePeriodTypes }
+  from "../../features/periodType/use_cases/populate";
 import { populatePetColorsCollection }
-  from "../../features/petColor/use_cases/create/index";
+  from "../../features/petColor/use_cases/populate/index";
 import { populateVaccinesCollection }
-  from "../../features/vaccine/use_cases/create";
+  from "../../features/vaccine/use_cases/populate";
 
 /**
  * Import this inside init.ts to ensure static collections are created
@@ -16,6 +18,7 @@ export const initializeStaticCollections = async () => {
     populateCatPedigreesCollection(),
     populatePetColorsCollection(),
     populateVaccinesCollection(),
+    populatePeriodTypes(),
   ]);
 
   // Future updates only

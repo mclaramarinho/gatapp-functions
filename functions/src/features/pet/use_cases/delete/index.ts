@@ -4,32 +4,32 @@ import { validateAuthToken } from "../../../../shared/auth/validateAuthToken";
 import { ExceptionsHandler }
   from "../../../../shared/handlers/ExceptionsHandler";
 import { onRequest } from "firebase-functions/v2/https";
+import { getAuthTokenFromRequest }
+  from "../../../../shared/auth/getAuthTokenFromRequest";
+import { MissingQueryParam }
+  from "../../../../shared/exceptions/MissingQueryParam";
+import { PetDoesNotExist }
+  from "../../../../shared/exceptions/pets/PetDoesNotExist";
+import { PetDoesNotBelongToUser }
+  from "../../../../shared/exceptions/pets/PetDoesNotBelongToUser";
 
 export const deletePet = onRequest(async (req, res) => {
   try {
     const petId = req.query.petId as string;
-    if (!petId) {
-      res.status(400).json({ message: "petId query parameter is required" });
-      return;
-    }
-    const oauthToken = req.headers.authorization;
+    if (!petId) throw new MissingQueryParam("petId");
+
     const ownerIdFromToken = await validateAuthToken(
-        oauthToken?.replace("Bearer ", "")
+        getAuthTokenFromRequest(req)
     );
 
     const petDocRef = firestore
         .collection(FirestoreCollections.Pets).doc(petId);
     const petDoc = await petDocRef.get();
-    if (!petDoc.exists) {
-      res.status(404).json({ message: "Pet not found" });
-      return;
-    }
+    if (!petDoc.exists) throw new PetDoesNotExist();
 
     const petData = petDoc.data();
     if (petData?.ownerId !== ownerIdFromToken) {
-      res.status(403)
-          .json({ message: "You do not have permission to delete this pet" });
-      return;
+      throw new PetDoesNotBelongToUser();
     }
 
     await petDocRef.delete();
@@ -37,8 +37,8 @@ export const deletePet = onRequest(async (req, res) => {
     res.status(204).json({ message: "Pet deleted successfully" });
     return;
   } catch (error) {
-    const errorHandled = ExceptionsHandler.handle(error as Error);
-    res.status(errorHandled.statusCode).json({ message: errorHandled.message });
+    const { statusCode, message } = ExceptionsHandler.handle(error as Error);
+    res.status(statusCode).json({ message: message });
     return;
   }
 });

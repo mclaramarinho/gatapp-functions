@@ -5,29 +5,28 @@ import { UserModel } from "./models/UserModel";
 import { validateAuthToken } from "../../../../shared/auth/validateAuthToken";
 import { FirestoreCollections } from "../../../../shared/firestore/collections";
 import { onRequest } from "firebase-functions/v2/https";
+import { getAuthTokenFromRequest }
+  from "../../../../shared/auth/getAuthTokenFromRequest";
+import { UserNotFound } from "../../../../shared/exceptions/users/UserNotFound";
 
 export const getUser = onRequest(async (req, res) => {
   try {
-    const oauthToken = req.headers.authorization;
-    const userId = await validateAuthToken(oauthToken?.replace("Bearer ", ""));
+    const userId = await validateAuthToken(getAuthTokenFromRequest(req));
 
     const userData = firestore
         .collection(FirestoreCollections.Users)
         .doc(userId.toString());
     const doc = await userData.get();
 
-    if (!doc.exists) {
-      res.status(404).json({ message: "User not found" });
-      return;
-    }
+    if (!doc.exists) throw UserNotFound;
 
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const model = new UserModel(doc.data()!);
     res.status(200).json(model);
     return;
   } catch (error) {
-    const responseForException = ExceptionsHandler.handle(error as Error);
-    res.status(responseForException.statusCode)
-        .json({ message: responseForException.message });
+    const { statusCode, message } = ExceptionsHandler.handle(error as Error);
+    res.status(statusCode).json({ message: message });
     return;
   }
 });
