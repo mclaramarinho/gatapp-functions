@@ -9,18 +9,17 @@ export class VaccinationScheduleModel {
   isRecurring: boolean;
 
   /**
-   * @param {string} vaccineScheduleId
-   * @param {number} vaccineId
-   * @param {string} petId
-   * @param {boolean} sendReminders
-   * @param {boolean} isRecurring
+   * @param {Map<String, any>} body
    */
   constructor(
-      vaccineScheduleId: string,
-      vaccineId: number,
-      petId: string,
-      sendReminders: boolean,
-      isRecurring: boolean
+      { vaccineScheduleId, vaccineId, petId, sendReminders, isRecurring }:
+      {
+        vaccineScheduleId: string,
+        vaccineId: number,
+        petId: string,
+        sendReminders: boolean,
+        isRecurring: boolean
+      }
   ) {
     this.vaccineScheduleId = vaccineScheduleId;
     this.vaccineId = vaccineId;

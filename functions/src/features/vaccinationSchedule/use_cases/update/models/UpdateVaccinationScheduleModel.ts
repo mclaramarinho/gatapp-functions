@@ -1,9 +1,8 @@
 /**
  * Model representing a vaccination schedule for a pet.
  */
-export class CreateVaccinationScheduleModel {
-  vaccineId: number;
-  petId: string;
+export class UpdateVaccinationScheduleModel {
+  scheduleId: string;
   sendReminders: boolean;
   isRecurring: boolean;
 
@@ -11,16 +10,14 @@ export class CreateVaccinationScheduleModel {
    * @param {Map<String, any>} body
    */
   constructor(
-      { vaccineId, petId, sendReminders, isRecurring }:
+      { scheduleId, sendReminders, isRecurring }:
       {
-        vaccineId: number,
-        petId: string,
+        scheduleId: string,
         sendReminders: boolean,
         isRecurring: boolean
       }
   ) {
-    this.vaccineId = vaccineId;
-    this.petId = petId;
+    this.scheduleId = scheduleId;
     this.sendReminders = sendReminders;
     this.isRecurring = isRecurring;
   }
