@@ -17,7 +17,7 @@ export class UserValidations {
         .collection(FirestoreCollections.Users)
         .doc(userId);
     if (!(await doc.get()).exists) {
-      throw UserNotFound;
+      throw new UserNotFound();
     }
   }
 }

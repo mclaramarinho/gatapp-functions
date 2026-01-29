@@ -12,7 +12,7 @@ import { PetDoesNotBelongToUser }
 import { getAuthTokenFromRequest }
   from "../../../../shared/auth/getAuthTokenFromRequest";
 import { MissingQueryParam }
-  from "../../../../shared/exceptions/MissingQueryParam";
+  from "../../../../shared/exceptions/MissingQueryParamException";
 
 export const updatePet = onRequest(async (req, res) => {
   try {

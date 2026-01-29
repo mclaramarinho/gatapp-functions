@@ -18,7 +18,7 @@ export const getUser = onRequest(async (req, res) => {
         .doc(userId.toString());
     const doc = await userData.get();
 
-    if (!doc.exists) throw UserNotFound;
+    if (!doc.exists) throw new UserNotFound();
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const model = new UserModel(doc.data()!);

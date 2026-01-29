@@ -1,7 +1,7 @@
 import { VaccinationScheduleModel }
   from "../../features/vaccinationSchedule/models/VaccinationScheduleModel";
-import { VaccinationScheduleNotFound }
-  from "../exceptions/vaccinationSchedules/VaccinationScheduleNotFound";
+import { ScheduleNotFound }
+  from "../exceptions/schedules/ScheduleNotFound";
 import { FirestoreCollections } from "../firestore/collections";
 import { firestore } from "../firestore/init";
 import { PetValidations } from "./PetValidations";
@@ -16,7 +16,7 @@ export class VaccinationScheduleValidations {
    *
    * @return {VaccinationScheduleModel}
    *
-   * @throws {VaccinationScheduleNotFound} if schedule does not exist
+   * @throws {ScheduleNotFound} if schedule does not exist
    * on database or if it does not belong to the user requesting
    */
   static async existsAndBelongsToUser(schedId: string, userId: string)
@@ -26,7 +26,7 @@ export class VaccinationScheduleValidations {
         .collection(FirestoreCollections.VaccinationSchedules)
         .where("id", "==", schedId)
         .get();
-    if (schedDoc.empty) throw new VaccinationScheduleNotFound();
+    if (schedDoc.empty) throw new ScheduleNotFound();
     const scheduleData = schedDoc.docs[0].data();
 
     // get schedule's pet id
@@ -43,7 +43,7 @@ export class VaccinationScheduleValidations {
         vaccineId: scheduleData.vaccineId,
       });
     } catch (error) {
-      throw new VaccinationScheduleNotFound();
+      throw new ScheduleNotFound();
     }
   }
 }

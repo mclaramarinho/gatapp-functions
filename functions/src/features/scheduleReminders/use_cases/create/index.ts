@@ -7,11 +7,18 @@ import { CreateScheduleReminderModel }
 import { firestore } from "../../../../shared/firestore/init";
 import { FirestoreCollections } from "../../../../shared/firestore/collections";
 import { MissingQueryParam }
-  from "../../../../shared/exceptions/MissingQueryParam";
+  from "../../../../shared/exceptions/MissingQueryParamException";
 import { getAuthTokenFromRequest }
   from "../../../../shared/auth/getAuthTokenFromRequest";
 import { VaccinationScheduleValidations }
   from "../../../../shared/validations/VaccinationScheduleValidations";
+import { InvalidQueryParam }
+  from "../../../../shared/exceptions/InvalidQueryParameterException";
+import { PeriodTypeValidations }
+  from "../../../../shared/validations/PeriodTypeValidations";
+import { ScheduleType } from "../../../../shared/enums/scheduleType";
+import { NotImplementedException }
+  from "../../../../shared/exceptions/NotImplementedException";
 
 /**
  * HTTP function to create a schedule reminder in Firestore.
@@ -33,11 +40,13 @@ export const createScheduleReminder = onRequest(async (req, res) => {
       case "2":
         // MEDICATION
         // TODO - implement
-        res.status(501).send({ error: "Not implemented yet." });
-        return;
+        throw new NotImplementedException();
       default:
-        res.status(400).send({ error: "Invalid scheduleType value" });
+        throw new InvalidQueryParam("scheduleType", ScheduleType.validValues);
     }
+
+    await PeriodTypeValidations.exists(model.periodTypeId);
+
     const docId = await firestore
         .collection(FirestoreCollections.ScheduleReminders)
         .add({

@@ -16,7 +16,7 @@ export class VaccineValidations {
         .get();
 
     if (!doc || doc.size === 0) {
-      throw VaccineNotFound;
+      throw new VaccineNotFound();
     }
   }
 }

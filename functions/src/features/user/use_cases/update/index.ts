@@ -6,7 +6,7 @@ import { FirestoreCollections } from "../../../../shared/firestore/collections";
 import { validateAuthToken } from "../../../../shared/auth/validateAuthToken";
 import { onRequest } from "firebase-functions/v2/https";
 import { MissingQueryParam }
-  from "../../../../shared/exceptions/MissingQueryParam";
+  from "../../../../shared/exceptions/MissingQueryParamException";
 import { UserManagementForbidden }
   from "../../../../shared/exceptions/users/UserManagementForbidden";
 import { UserNotFound } from "../../../../shared/exceptions/users/UserNotFound";

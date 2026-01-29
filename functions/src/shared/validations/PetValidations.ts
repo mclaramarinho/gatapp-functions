@@ -20,7 +20,7 @@ export class PetValidations {
         .where("id", "==", petId)
         .get();
     if (!petDoc || petDoc.size === 0) {
-      throw PetDoesNotExist;
+      throw new PetDoesNotExist();
     }
   }
 
@@ -38,11 +38,11 @@ export class PetValidations {
         .where("id", "==", petId)
         .get();
     if (!petDoc || petDoc.size === 0) {
-      throw PetDoesNotExist;
+      throw new PetDoesNotExist();
     }
     const petData = petDoc.docs[0].data();
     if (petData.ownerId !== userId) {
-      throw PetDoesNotBelongToUser;
+      throw new PetDoesNotBelongToUser();
     }
   }
 }

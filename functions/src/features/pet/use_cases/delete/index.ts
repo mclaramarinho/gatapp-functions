@@ -7,7 +7,7 @@ import { onRequest } from "firebase-functions/v2/https";
 import { getAuthTokenFromRequest }
   from "../../../../shared/auth/getAuthTokenFromRequest";
 import { MissingQueryParam }
-  from "../../../../shared/exceptions/MissingQueryParam";
+  from "../../../../shared/exceptions/MissingQueryParamException";
 import { PetDoesNotExist }
   from "../../../../shared/exceptions/pets/PetDoesNotExist";
 import { PetDoesNotBelongToUser }

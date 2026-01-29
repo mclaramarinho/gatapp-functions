@@ -5,7 +5,7 @@ import { validateAuthToken } from "../../../../shared/auth/validateAuthToken";
 import { getAuthTokenFromRequest }
   from "../../../../shared/auth/getAuthTokenFromRequest";
 import { MissingQueryParam }
-  from "../../../../shared/exceptions/MissingQueryParam";
+  from "../../../../shared/exceptions/MissingQueryParamException";
 import { VaccinationScheduleValidations }
   from "../../../../shared/validations/VaccinationScheduleValidations";
 import { firestore } from "../../../../shared/firestore/init";

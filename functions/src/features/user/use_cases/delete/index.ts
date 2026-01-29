@@ -21,14 +21,14 @@ export const deleteUser = onRequest(async (req, res) => {
     );
 
     if (model.id !== userIdFromToken) {
-      throw UserManagementForbidden;
+      throw new UserManagementForbidden();
     }
 
     const doc = firestore
         .collection(FirestoreCollections.Users)
         .doc(userIdFromToken);
     if (!(await doc.get()).exists) {
-      throw UserNotFound;
+      throw new UserNotFound();
     }
 
     const data = (await doc.get()).data();
