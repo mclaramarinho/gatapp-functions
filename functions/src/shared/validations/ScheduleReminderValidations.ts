@@ -1,3 +1,5 @@
+import { ScheduleReminderModel }
+  from "../../features/scheduleReminders/models/ScheduleReminderModel";
 import { ScheduleTypeData } from "../enums/scheduleType";
 import { NotImplementedException } from "../exceptions/NotImplementedException";
 import { ScheduleReminderNotFound }
@@ -17,6 +19,8 @@ export class ScheduleReminderValidations {
    * @param {string} userId
    * @param {number} scheduleType
    *
+   * @return {ScheduleReminderModel}
+   *
    * @throws {ScheduleNotFound}
    * @throws {ScheduleReminderNotFound}
    */
@@ -24,7 +28,7 @@ export class ScheduleReminderValidations {
       reminderId: string,
       userId: string,
       scheduleType: ScheduleTypeData
-  ) {
+  ) : Promise<ScheduleReminderModel> {
     // Validate reminder exists
     const result = await firestore
         .collection(FirestoreCollections.ScheduleReminders)
@@ -34,7 +38,9 @@ export class ScheduleReminderValidations {
 
     // Validate schedule exists
     if (!scheduleType.collection) throw new NotImplementedException();
-    const scheduleId = result.data()?.scheduleId;
+    const reminder = result.data();
+    if (!reminder) throw new ScheduleReminderNotFound();
+    const scheduleId = reminder.scheduleId;
     const schedule = await firestore
         .collection(scheduleType.collection)
         .doc(scheduleId)
@@ -42,5 +48,12 @@ export class ScheduleReminderValidations {
     if (!schedule.exists) throw new ScheduleNotFound();
     const petId = schedule.data()?.petId;
     await PetValidations.existsAndBelongsToUser(petId, userId);
+
+    return new ScheduleReminderModel(
+        result.id,
+        reminder.scheduleId,
+        reminder.remindTime,
+        reminder.periodTypeId
+    );
   }
 }

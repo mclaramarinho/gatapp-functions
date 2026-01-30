@@ -2,8 +2,6 @@ import { onRequest } from "firebase-functions/v2/https";
 import { ExceptionsHandler }
   from "../../../../shared/handlers/ExceptionsHandler";
 import { validateAuthToken } from "../../../../shared/auth/validateAuthToken";
-import { CreateScheduleReminderModel }
-  from "./models/CreateScheduleReminderModel";
 import { firestore } from "../../../../shared/firestore/init";
 import { FirestoreCollections } from "../../../../shared/firestore/collections";
 import { MissingQueryParam }
@@ -20,13 +18,19 @@ import { ScheduleType } from "../../../../shared/enums/scheduleType";
 import { NotImplementedException }
   from "../../../../shared/exceptions/NotImplementedException";
 
+interface ICreateScheduleReminderModel {
+  scheduleId: string;
+  remindTime: number;
+  periodTypeId: number;
+}
+
 /**
  * HTTP function to create a schedule reminder in Firestore.
  */
 export const createScheduleReminder = onRequest(async (req, res) => {
   try {
     const uid = await validateAuthToken(getAuthTokenFromRequest(req));
-    const model = new CreateScheduleReminderModel(req.body);
+    const model = req.body as ICreateScheduleReminderModel;
 
     const scheduleType = req.params.scheduleType as string;
     if (!scheduleType) throw new MissingQueryParam("scheduleType");
