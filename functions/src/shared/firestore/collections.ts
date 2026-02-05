@@ -6,5 +6,6 @@ export enum FirestoreCollections {
     Vaccines = "vaccines",
     PeriodTypes = "periodTypes",
     ScheduleReminders = "scheduleReminders",
-    VaccinationSchedules = "vaccinationSchedules"
+    VaccinationSchedules = "vaccinationSchedules",
+    ScheduleRecurrences = "vaccinationRecurrences"
 }
