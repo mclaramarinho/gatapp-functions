@@ -19,10 +19,13 @@ if (getApps().length === 0) {
 
 setGlobalOptions({ maxInstances: 10 });
 
-export * from "./features/pet";
 export * from "./features/pedigree";
+export * from "./features/periodType";
+export * from "./features/pet";
 export * from "./features/petColor";
+export * from "./features/scheduleReminders";
 export * from "./features/user";
+export * from "./features/vaccinationSchedule";
 export * from "./features/vaccine";
 
 // TODO - createProfessional

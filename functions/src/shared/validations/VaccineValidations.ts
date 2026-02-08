@@ -7,7 +7,7 @@ import { firestore } from "../firestore/init";
  */
 export class VaccineValidations {
   /**
-   * @param {string} vaccineId
+   * @param {number} vaccineId
    */
   static async exists(vaccineId: number) {
     const doc = await firestore
